@@ -1,8 +1,25 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+import NewBrand from './components/brand/NewBrand';
+import NewCar from './components/car/NewCar';
+import Header from './components/Header';
+import NewOwner from './components/owner/NewOwner';
 
 function App() {
     return (
-        <h1>Gradiweb app parqueadero</h1>
+        <Router>
+
+            <Header />
+            <div className="container mt-5">
+                <Switch>
+                    <Route exact path="/car/create" component={NewCar} />
+                    <Route exact path="/owner/create" component={NewOwner} />
+                    <Route exact path="/brand/create" component={NewBrand} />
+                </Switch>
+            </div>
+            
+        </Router>
     );
 }
 
