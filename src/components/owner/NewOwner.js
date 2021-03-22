@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
+import { createOwner } from '../actions/api';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -11,7 +14,9 @@ const NewOwner = () => {
         'identification_card': '',
         'email': '',
         'phone': ''
-    })
+    });
+
+    const {name, identification_card, email, phone} = owner; 
 
     const handleChangeData = e => {
         e.preventDefault();
@@ -23,7 +28,32 @@ const NewOwner = () => {
 
     const  handleSubmit = e => {
         e.preventDefault();
-        console.log("submit");
+
+        const saveOwnerForm = async () => {
+            try {
+                await createOwner({owner});
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Propietario salvado correctamente',
+                });
+
+                //reiniciar form
+                setowner({
+                    name: '',
+                    identification_card: '',
+                    email: '',
+                    phone: ''
+                });
+
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `Algo salio mal! =  ${error}`,
+                })   
+            }
+        }
+        saveOwnerForm();
     }
 
     return (  
@@ -43,6 +73,7 @@ const NewOwner = () => {
                                 fullWidth 
                                 margin="normal"
                                 name= "name"
+                                value={name}
                                 onChange={handleChangeData}
                             />
 
@@ -52,6 +83,7 @@ const NewOwner = () => {
                                 fullWidth 
                                 margin="normal"
                                 name= "identification_card"
+                                value={identification_card}
                                 onChange={handleChangeData}
                             />
 
@@ -61,6 +93,7 @@ const NewOwner = () => {
                                 fullWidth 
                                 margin="normal"
                                 name= "email"
+                                value={email}
                                 onChange={handleChangeData}
                             />
 
@@ -70,6 +103,7 @@ const NewOwner = () => {
                                 fullWidth 
                                 margin="normal"
                                 name= "phone"
+                                value={phone}
                                 onChange={handleChangeData}
                             />
 

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
+import { createBrand } from '../actions/api';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -10,6 +13,8 @@ const NewBrand = () => {
         'name': ''
     });
 
+    const { name } = brand;
+
     const handleChangeData = e => {
         setbrand({
             ...brand,
@@ -19,7 +24,29 @@ const NewBrand = () => {
 
     const  handleSubmit = e => {
         e.preventDefault();
-        console.log("submit");
+        
+        const saveBrandForm = async() => {
+            try {
+                await createBrand({brand});
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Marca salvada correctamente',
+                });
+
+                //reiniciar form
+                setbrand({
+                    name: ''
+                })
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `Algo salio mal! =  ${error}`,
+                })   
+            }
+        }
+
+        saveBrandForm();
     }
 
     return (  
@@ -39,6 +66,7 @@ const NewBrand = () => {
                                 fullWidth 
                                 margin="normal"
                                 name= "name"
+                                value={name}
                                 onChange={handleChangeData}
                             />
 

@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+
+import { getOwners, getBrands, createCar } from '../actions/api';
 
 
 const NewCar = () => {
@@ -18,6 +21,35 @@ const NewCar = () => {
         'brand_id': ''
     });
 
+    const { license_plate, type, color, owner_id, brand_id } = car;
+
+    const [owners, setowners] = useState([]);
+    const [brands, setbrands] = useState([]);
+
+    useEffect(() => {
+        const getOwnersData = async () => {
+            try {
+                const dataOwners = await getOwners(); 
+                setowners(dataOwners.data.results);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        
+        const getBrandsData = async () => {
+            try {
+                const dataBrands = await getBrands(); 
+                setbrands(dataBrands.data.results);
+            } catch (error) {
+                console.log(error);
+            }
+        } 
+        
+        getOwnersData();
+        getBrandsData();
+
+    }, [])
+
 
     const handleChangeData = e => {
         setcar({
@@ -28,7 +60,31 @@ const NewCar = () => {
 
     const  handleSubmit = e => {
         e.preventDefault();
-        console.log("submit");
+        
+        const saveCarForm = async () => {
+            try {
+                await createCar({car});
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Carro salvado correctamente',
+                });
+
+                setcar({
+                    license_plate: '',
+                    type: '',
+                    color: '',
+                    owner_id: '',
+                    brand_id: ''
+                });
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `Algo salio mal! =  ${error}`,
+                }) 
+            }
+        }
+        saveCarForm();
     }
 
     return (
@@ -49,6 +105,7 @@ const NewCar = () => {
                                 fullWidth 
                                 margin="normal"
                                 name= "license_plate"
+                                value={license_plate}
                                 onChange={handleChangeData}
                             />
 
@@ -58,6 +115,7 @@ const NewCar = () => {
                                 fullWidth 
                                 margin="normal"
                                 name= "type"
+                                value={type}
                                 onChange={handleChangeData}
                             />
 
@@ -67,6 +125,7 @@ const NewCar = () => {
                                 fullWidth 
                                 margin="normal"
                                 name= "color"
+                                value={color}
                                 onChange={handleChangeData}
                             />
 
@@ -77,13 +136,17 @@ const NewCar = () => {
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
                                             name="owner_id"
-                                            value={car.owner_id}
+                                            value={owner_id}
                                             onChange={handleChangeData}
                                             fullWidth
                                         >
-                                            <MenuItem value={10}>Ten</MenuItem>
-                                            <MenuItem value={20}>Twenty</MenuItem>
-                                            <MenuItem value={30}>Thirty</MenuItem>
+                                        {owners.map(owner => (
+                                            <MenuItem
+                                                key={owner.id}
+                                                value={owner.id}
+                                            >{owner.name}</MenuItem>
+                                        ))}
+
                                         </Select>
                                 </div>
                                 <div className="col-md-6 mt-4">
@@ -92,13 +155,16 @@ const NewCar = () => {
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
                                             name="brand_id"
-                                            value={car.brand_id}
+                                            value={brand_id}
                                             onChange={handleChangeData}
                                             fullWidth
                                         >
-                                            <MenuItem value={10}>Ten</MenuItem>
-                                            <MenuItem value={20}>Twenty</MenuItem>
-                                            <MenuItem value={30}>Thirty</MenuItem>
+                                        {brands.map(brand => (
+                                            <MenuItem
+                                                key={brand.id}
+                                                value={brand.id}
+                                            >{brand.name}</MenuItem>
+                                        ))}
                                         </Select>
                                 </div>
                             </div>
