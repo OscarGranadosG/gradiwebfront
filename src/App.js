@@ -5,6 +5,7 @@ import NewBrand from './components/brand/NewBrand';
 import NewCar from './components/car/NewCar';
 import Header from './components/Header';
 import NewOwner from './components/owner/NewOwner';
+import TableData from './components/tabledata/TableData';
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
             <Header />
             <div className="container mt-5">
                 <Switch>
+                    <Route exact path="/" component={TableData} />
                     <Route exact path="/car/create" component={NewCar} />
                     <Route exact path="/owner/create" component={NewOwner} />
                     <Route exact path="/brand/create" component={NewBrand} />

@@ -22,7 +22,13 @@ const createCar = async ({ car }) => {
     return await axios.post(`${URL}/car`, car);
 }
 
+const getCarsByBrand = async () => {
+    return await axios.get(`${URL}/carsByBrand`);
+}
 
+const getAlltableData = async () => {
+    return await axios.get(`${URL}/allData`);
+}
 
 
 export {
@@ -30,5 +36,7 @@ export {
     createBrand,
     getOwners,
     getBrands,
-    createCar
+    createCar,
+    getCarsByBrand,
+    getAlltableData
 }
