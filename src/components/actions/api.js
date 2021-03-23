@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = 'http://gradiweb_api.test/api';
+const URL = 'https://gradiweb-api.herokuapp.com/api';
 
 const createOwner = async ({ owner }) => {   
     return await axios.post(`${URL}/owner`, owner);
